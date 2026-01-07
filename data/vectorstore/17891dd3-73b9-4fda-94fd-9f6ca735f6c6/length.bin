@@ -1,0 +1,9 @@
+ List is a collection which is ordered and changeable and allows duplicate members. 
+(Grow and shrink as needed, sequence type, sortable). 
+ To use a list, you must declare it first. Do this using square brackets and separate 
+values with commas. 
+ We can construct / create list in many ways. 
+Ex:  
+>>> list1=[1,2,3,'A','B',7,8,[10,11]] 
+>>> print(list1) 
+[1, 2, 3, 'A', 'B', 7, 8, [10, 11
