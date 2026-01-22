@@ -1,0 +1,107 @@
+* {
+  box-sizing: border-box;
+  font-family: "Segoe UI", system-ui, sans-serif;
+}
+
+body {
+  margin: 0;
+}
+
+/* FULL SCREEN BACKGROUND */
+.login-page {
+  width: 100vw;
+  height: 100vh;
+  background: linear-gradient(135deg, #7b2ff7, #ff4ecd);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* LOGIN CARD */
+.login-card {
+  width: 660px;
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 28px;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+  text-align: center;
+}
+
+/* ICON */
+.icon {
+  width: 52px;
+  height: 52px;
+  margin: 0 auto 12px;
+  background: linear-gradient(135deg, #7b2ff7, #ff4ecd);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  color: white;
+}
+
+/* TEXT */
+h2 {
+  margin: 8px 0;
+  font-size: 20px;
+  font-weight: bold;
+  color: #000000;
+}
+
+.subtitle {
+  font-size: 15px;
+  font-weight: bold;
+  color: #777;
+  margin-bottom: 18px;
+}
+
+/* FORM */
+label {
+  display: block;
+  text-align: left;
+  font-size: 18px;
+  font-weight: bo;
+  margin-bottom: 6px;
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+
+  /* ENTRY BOX COLOR */
+  background-color: #000000;   /* dark box */
+  color: rgb(255, 255, 255);
+
+  margin-bottom: 14px;
+}
+
+
+input::placeholder {
+  color: #ffffff;
+}
+
+input:focus {
+  outline: none;               /* removes blue border */
+  background-color: #131212a2;   /* your own focus color */
+}
+
+
+/* LOGIN BUTTON */
+button {
+  width: 100%;
+  padding: 12px;
+  border-radius: 10px;
+  border: none;
+  background: linear-gradient(135deg, #7b2ff7, #ff4ecd);
+  color: white;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+button:hover {
+  opacity: 0.95;
+}
