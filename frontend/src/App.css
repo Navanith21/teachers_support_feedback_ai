@@ -1,13 +1,27 @@
+/* ======================
+   GLOBAL
+====================== */
 * {
   box-sizing: border-box;
   font-family: "Segoe UI", system-ui, sans-serif;
+}
+
+html,
+body,
+#root {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
 }
 
 body {
   margin: 0;
 }
 
-/* FULL SCREEN BACKGROUND */
+/* ======================
+   LOGIN PAGE
+====================== */
 .login-page {
   width: 100vw;
   height: 100vh;
@@ -17,7 +31,6 @@ body {
   align-items: center;
 }
 
-/* LOGIN CARD */
 .login-card {
   width: 660px;
   background: #ffffff;
@@ -27,7 +40,6 @@ body {
   text-align: center;
 }
 
-/* ICON */
 .icon {
   width: 52px;
   height: 52px;
@@ -41,27 +53,25 @@ body {
   color: white;
 }
 
-/* TEXT */
 h2 {
   margin: 8px 0;
   font-size: 20px;
   font-weight: bold;
-  color: #000000;
+  color: #000;
 }
 
 .subtitle {
-  font-size: 15px;
+  font-size: 14px;
   font-weight: bold;
   color: #777;
   margin-bottom: 18px;
 }
 
-/* FORM */
 label {
   display: block;
   text-align: left;
-  font-size: 18px;
-  font-weight: bo;
+  font-size: 16px;
+  font-weight: bolder;
   margin-bottom: 6px;
 }
 
@@ -70,26 +80,37 @@ input {
   padding: 10px;
   border-radius: 8px;
   border: none;
-
-  /* ENTRY BOX COLOR */
-  background-color: #000000;   /* dark box */
-  color: rgb(255, 255, 255);
-
+  background: #000;
+  color: white;
   margin-bottom: 14px;
 }
 
-
 input::placeholder {
-  color: #ffffff;
+  color: #ddd;
 }
 
 input:focus {
-  outline: none;               /* removes blue border */
-  background-color: #131212a2;   /* your own focus color */
+  outline: none;
+  background: #1c1c1c;
 }
 
+.password-wrapper {
+  position: relative;
+}
 
-/* LOGIN BUTTON */
+.password-wrapper input {
+  padding-right: 40px;
+}
+
+.eye-icon {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #fff;
+}
+
 button {
   width: 100%;
   padding: 12px;
@@ -102,6 +123,160 @@ button {
   cursor: pointer;
 }
 
-button:hover {
-  opacity: 0.95;
+/* ======================
+   DASHBOARD LAYOUT
+====================== */
+.dashboard-page {
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+  background: #f5f7fb;
+}
+
+/* ======================
+   SIDEBAR (FIXED)
+====================== */
+.sidebar {
+  width: 240px;
+  background: #1e293b;
+  color: white;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.logo {
+  font-size: 20px;
+  font-weight: 700;
+  padding: 20px 16px;
+}
+
+.sidebar nav {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 0 10px;
+}
+
+.sidebar nav a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 8px;
+  color: #cfd6ff;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.sidebar nav a.active,
+.sidebar nav a:hover {
+  background: #2d3a64;
+  color: white;
+}
+
+.logout {
+  margin-top: auto;
+  padding: 14px 16px;
+  font-size: 13px;
+  opacity: 0.8;
+  cursor: pointer;
+}
+
+/* ======================
+   MAIN CONTENT
+====================== */
+.dashboard-main {
+  flex: 1;
+  padding: 24px;
+  overflow-y: auto;
+}
+
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.profile {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #ddd;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dashboard-content {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 24px;
+  margin-top: 20px;
+}
+
+/* ======================
+   CLASS CARDS
+====================== */
+.class-card {
+  background: white;
+  padding: 16px;
+  border-radius: 12px;
+  margin-bottom: 14px;
+}
+
+.actions {
+  margin-top: 10px;
+}
+
+.btn-light {
+  padding: 6px 14px;
+  border-radius: 8px;
+  border: none;
+  background: #55dada;
+  margin-right: 8px;
+}
+
+.btn-primary {
+  padding: 6px 14px;
+  border-radius: 8px;
+  border: none;
+  background: #4f6cf7;
+  color: white;
+}
+
+/* ======================
+   TOOLS
+====================== */
+.tools {
+  background: white;
+  border-radius: 12px;
+  padding: 16px;
+}
+
+.tool-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+
+.tool-card.blue { background: #eef3ff; }
+.tool-card.purple { background: #f3e9ff; }
+.tool-card.green { background: #e9f7ef; }
+.tool-card.orange { background: #fff3e8; }
+
+/* ======================
+   MOBILE
+====================== */
+@media (max-width: 768px) {
+  .sidebar {
+    display: none;
+  }
+
+  .dashboard-content {
+    grid-template-columns: 1fr;
+  }
 }

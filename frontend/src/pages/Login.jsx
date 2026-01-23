@@ -4,11 +4,15 @@ import "../App.css";
 
 export default function Login() {
   const navigate = useNavigate();
+
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleLogin = () => {
     if (username === "teacher" && password === "1234") {
+      localStorage.setItem("isLoggedIn", "true");
+      localStorage.setItem("username", username);
       navigate("/dashboard");
     } else {
       alert("Invalid username or password");
@@ -32,12 +36,20 @@ export default function Login() {
         />
 
         <label>Password</label>
-        <input
-          type="password"
-          placeholder="Enter your password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
+        <div className="password-wrapper">
+          <input
+            type={showPassword ? "text" : "password"}
+            placeholder="Enter your password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <span
+            className="eye-icon"
+            onClick={() => setShowPassword(!showPassword)}
+          >
+            {showPassword ? "🙈" : "👁"}
+          </span>
+        </div>
 
         <button onClick={handleLogin}>Login</button>
       </div>
