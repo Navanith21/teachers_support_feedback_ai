@@ -1,129 +1,163 @@
+import { useNavigate, NavLink } from "react-router-dom";
+import {
+  FaTachometerAlt,
+  FaBook,
+  FaClipboardCheck,
+  FaChartLine,
+  FaSignOutAlt,
+} from "react-icons/fa";
 import "../App.css";
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 
 export default function Dashboard() {
   const navigate = useNavigate();
-  const [userName, setUserName] = useState("");
-  const goDashboard = () => navigate("/dashboard");
-  const goSidebarWrite = () => navigate("/write");
-  const goSidebarView = () => navigate("/view");
-  const goLessonPlanner = () => navigate("/lesson-planner");
-  const goHomework = () => navigate("/homework");
-
-
-  // 🔒 PROTECT DASHBOARD + GET USERNAME
-  useEffect(() => {
-    const isLoggedIn = localStorage.getItem("isLoggedIn");
-    const storedUser = localStorage.getItem("username");
-
-    if (!isLoggedIn) {
-      navigate("/");
-    } else {
-      setUserName(storedUser);
-    }
-  }, [navigate]);
-
-  // 🚪 LOGOUT FUNCTION
-  const handleLogout = () => {
-    localStorage.removeItem("isLoggedIn");
-    localStorage.removeItem("username");
-    navigate("/");
-  };
-
-  // 👉 WRITE / VIEW NAVIGATION (CORRECT PLACE)
-  const goWrite = () => navigate("/write");
-  const goView = () => navigate("/view");
+  const username = localStorage.getItem("username") || "Teacher";
 
   return (
     <div className="dashboard-page">
-      {/* Sidebar */}
+      {/* ================= SIDEBAR ================= */}
       <aside className="sidebar">
         <div className="logo">TeachAI</div>
 
-          <nav>
-            <a className="active" onClick={goDashboard}>Dashboard</a>
-            <a onClick={goSidebarWrite}>Write Notes</a>
-            <a onClick={goSidebarView}>View Notes</a>
-            <a onClick={goLessonPlanner}>Lesson Planner</a>
-            <a onClick={goHomework}>Homework Analysis</a>
+        <nav>
+          <NavLink
+            to="/dashboard"
+            className={({ isActive }) => (isActive ? "active" : "")}
+          >
+            <FaTachometerAlt className="nav-icon" />
+            Dashboard
+          </NavLink>
 
-          </nav>
+          <NavLink
+            to="/lesson-planner"
+            className={({ isActive }) => (isActive ? "active" : "")}
+          >
+            <FaBook className="nav-icon" />
+            Lesson Planner
+          </NavLink>
 
+          <NavLink
+            to="/homework"
+            className={({ isActive }) => (isActive ? "active" : "")}
+          >
+            <FaClipboardCheck className="nav-icon" />
+            Homework Analysis
+          </NavLink>
 
-        <div className="logout" onClick={handleLogout}>
+          <NavLink
+            to="/student-progress"
+            className={({ isActive }) => (isActive ? "active" : "")}
+          >
+            <FaChartLine className="nav-icon" />
+            Student Progress
+          </NavLink>
+        </nav>
+
+        <div
+          className="logout"
+          onClick={() => {
+            localStorage.clear();
+            navigate("/");
+          }}
+        >
+          <FaSignOutAlt className="nav-icon" />
           Logout
         </div>
       </aside>
 
-      {/* Main content */}
+      {/* ================= MAIN ================= */}
       <main className="dashboard-main">
-        <header className="dashboard-header">
-          <h2>Welcome, {userName}</h2>
+        <div className="dashboard-header">
+          <h2>Welcome, {username}</h2>
           <div className="profile">👤</div>
-        </header>
+        </div>
 
-        <div className="dashboard-content">
-          <section className="classes">
-            <div className="class-card">
-              <h3>BIAT</h3>
-              <p>1st Year</p>
-              <div className="actions">
-                <button className="btn-light" onClick={goWrite}>
-                  Write
-                </button>
-                <button className="btn-primary" onClick={goView}>
-                  View
-                </button>
+        {/* ================= CONTENT ================= */}
+        <div>
+          {/* BIAT */}
+          <div className="section">
+            <div className="section-title">BIAT</div>
+
+            <div className="grid">
+              <div className="grid-card">
+                <h4>1st Year</h4>
+                <div className="actions">
+                  <button
+                    className="btn-light"
+                    onClick={() => navigate("/write")}
+                  >
+                    Write
+                  </button>
+                  <button
+                    className="btn-primary"
+                    onClick={() => navigate("/view")}
+                  >
+                    View
+                  </button>
+                </div>
+              </div>
+
+              <div className="grid-card">
+                <h4>2nd Year</h4>
+                <div className="actions">
+                  <button
+                    className="btn-light"
+                    onClick={() => navigate("/write")}
+                  >
+                    Write
+                  </button>
+                  <button
+                    className="btn-primary"
+                    onClick={() => navigate("/view")}
+                  >
+                    View
+                  </button>
+                </div>
               </div>
             </div>
+          </div>
 
-            <div className="class-card">
-              <h3>2nd Year</h3>
-              <p>1st Year</p>
-              <div className="actions">
-                <button className="btn-light" onClick={goWrite}>
-                  Write
-                </button>
-                <button className="btn-primary" onClick={goView}>
-                  View
-                </button>
+          {/* UDAVI */}
+          <div className="section">
+            <div className="section-title">Udavi</div>
+
+            <div className="grid">
+              <div className="grid-card">
+                <h4>11th Std</h4>
+                <div className="actions">
+                  <button
+                    className="btn-light"
+                    onClick={() => navigate("/write")}
+                  >
+                    Write
+                  </button>
+                  <button
+                    className="btn-primary"
+                    onClick={() => navigate("/view")}
+                  >
+                    View
+                  </button>
+                </div>
+              </div>
+
+              <div className="grid-card">
+                <h4>5th Std</h4>
+                <div className="actions">
+                  <button
+                    className="btn-light"
+                    onClick={() => navigate("/write")}
+                  >
+                    Write
+                  </button>
+                  <button
+                    className="btn-primary"
+                    onClick={() => navigate("/view")}
+                  >
+                    View
+                  </button>
+                </div>
               </div>
             </div>
-
-            <div className="class-card">
-              <h3>Udavi</h3>
-              <p>11th Std</p>
-              <div className="actions">
-                <button className="btn-light" onClick={goWrite}>
-                  Write
-                </button>
-                <button className="btn-primary" onClick={goView}>
-                  View
-                </button>
-              </div>
-            </div>
-
-            <div className="class-card">
-              <h3>6th</h3>
-              <div className="actions">
-                <button className="btn-light" onClick={goWrite}>
-                  Write
-                </button>
-                <button className="btn-primary" onClick={goView}>
-                  View
-                </button>
-              </div>
-            </div>
-          </section>
-
-          <section className="tools">
-            <h3>AI-Powered Tools</h3>
-            <div className="tool-card blue">📘 AI Lesson Planner</div>
-            <div className="tool-card purple">📊 Homework Analysis</div>
-            <div className="tool-card green">📚 Lesson Planner</div>
-            <div className="tool-card orange">👥 Student Progress</div>
-          </section>
+          </div>
         </div>
       </main>
     </div>

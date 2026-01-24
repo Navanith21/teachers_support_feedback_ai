@@ -1,4 +1,4 @@
-/* ======================
+ /* ======================
    GLOBAL
 ====================== */
 * {
@@ -159,15 +159,14 @@ button {
 }
 
 .sidebar nav a {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 12px 14px;
+  display: block;
+  padding: 10px;
+  margin-bottom: 6px;
   border-radius: 8px;
   color: #cfd6ff;
   cursor: pointer;
-  font-size: 14px;
 }
+
 
 .sidebar nav a.active,
 .sidebar nav a:hover {
@@ -279,4 +278,151 @@ button {
   .dashboard-content {
     grid-template-columns: 1fr;
   }
+}
+
+/* ======================
+   GRID DASHBOARD (NEW)
+====================== */
+
+/* Welcome text */
+.welcome-text {
+  margin-bottom: 20px;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+/* Section container (BIAT / Udavi) */
+.section {
+  background: white;
+  padding: 20px;
+  border-radius: 14px;
+  margin-bottom: 24px;
+}
+
+/* Section title */
+.section-title {
+  margin-bottom: 16px;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+/* GRID layout (2 cards per row) */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+/* Each class card */
+.grid-card {
+  background: #f9fafc;
+  padding: 20px;
+  border-radius: 12px;
+}
+
+/* Buttons inside cards */
+.grid-card .actions {
+  margin-top: 12px;
+  display: flex;
+  gap: 10px;
+}
+
+/* Mobile: stack cards */
+@media (max-width: 768px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Sidebar icons */
+.nav-icon {
+  margin-right: 10px;
+  font-size: 14px;
+  vertical-align: middle;
+}
+
+/* ======================
+   WRITE NOTES PAGE
+====================== */
+.write-page {
+  min-height: 100vh;
+  background: #f5f7fb;
+  padding: 20px;
+}
+
+.write-header {
+  margin-bottom: 16px;
+}
+
+.write-header h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+/* Card */
+.write-card {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  max-width: 500px;
+}
+
+/* Inputs */
+.write-card label {
+  display: block;
+  margin-top: 12px;
+  margin-bottom: 4px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.write-card input,
+.write-card textarea {
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  font-size: 14px;
+  resize: none;
+}
+
+.write-card textarea {
+  background: #f9fafc;
+}
+
+/* Buttons */
+.write-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.btn-back {
+  background: #e5e7eb;
+  color: #333;
+  border: none;
+  padding: 8px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.btn-save {
+  background: linear-gradient(135deg, #7b2ff7, #6a5af9);
+  color: white;
+  border: none;
+  padding: 8px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+/* Date picker input */
+.date-input {
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  font-size: 14px;
+  background: rgb(12, 5, 5);
+  cursor: pointer;
 }

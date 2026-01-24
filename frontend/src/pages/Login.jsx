@@ -4,7 +4,6 @@ import "../App.css";
 
 export default function Login() {
   const navigate = useNavigate();
-
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -23,30 +22,25 @@ export default function Login() {
     <div className="login-page">
       <div className="login-card">
         <div className="icon">👤</div>
-
         <h2>Welcome to Teacher Support AI</h2>
         <p className="subtitle">Login to your account</p>
 
         <label>Username</label>
         <input
-          type="text"
-          placeholder="Enter your username"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
+          placeholder="Enter your username"
         />
 
         <label>Password</label>
         <div className="password-wrapper">
           <input
             type={showPassword ? "text" : "password"}
-            placeholder="Enter your password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            placeholder="Enter your password"
           />
-          <span
-            className="eye-icon"
-            onClick={() => setShowPassword(!showPassword)}
-          >
+          <span className="eye-icon" onClick={() => setShowPassword(!showPassword)}>
             {showPassword ? "🙈" : "👁"}
           </span>
         </div>
