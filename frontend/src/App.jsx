@@ -5,6 +5,7 @@ import Write from "./pages/Write";
 import View from "./pages/View";
 import LessonPlanner from "./pages/LessonPlanner";
 import Homework from "./pages/Homework";
+import ViewResult from "./pages/ViewResult";
 
 export default function App() {
   return (
@@ -17,7 +18,12 @@ export default function App() {
         <Route path="/view" element={<View />} />
         <Route path="/lesson-planner" element={<LessonPlanner />} />
         <Route path="/homework" element={<Homework />} />
+        <Route path="/view-result" element={<ViewResult />} />  
       </Routes>
     </BrowserRouter>
   );
 }
+
+
+
+
