@@ -87,12 +87,13 @@ export default function Dashboard() {
                   >
                     Write
                   </button>
-                  <button
-                    className="btn-primary"
-                    onClick={() => navigate("/view")}
-                  >
-                    View
-                  </button>
+                    <button
+                      type="button"
+                      className="btn-primary"
+                      onClick={() => navigate("/view")}
+                    >
+                      View
+                    </button>
                 </div>
               </div>
 

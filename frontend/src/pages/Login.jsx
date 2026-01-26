@@ -32,19 +32,23 @@ export default function Login() {
           placeholder="Enter your username"
         />
 
-        <label>Password</label>
-        <div className="password-wrapper">
-          <input
-            type={showPassword ? "text" : "password"}
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="Enter your password"
-          />
-          <span className="eye-icon" onClick={() => setShowPassword(!showPassword)}>
-            {showPassword ? "🙈" : "👁"}
-          </span>
-        </div>
+            <label>Password</label>
+            <div className="password-wrapper">
+              <input
+                type={showPassword ? "text" : "password"}
+                placeholder="Enter your password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
 
+              <span
+                className="eye-icon"
+                onMouseDown={(e) => e.preventDefault()}
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? "🙈" : "👁"}
+              </span>
+            </div>
         <button onClick={handleLogin}>Login</button>
       </div>
     </div>

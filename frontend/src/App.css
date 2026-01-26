@@ -93,23 +93,35 @@ input:focus {
   outline: none;
   background: #1c1c1c;
 }
+.password-wrapper {
+  position: relative;
+  width: 100%;
+}
 
 .password-wrapper {
   position: relative;
 }
 
 .password-wrapper input {
-  padding-right: 40px;
+  width: 100%;
+  height: 44px;              /* 🔑 FIX */
+  padding-right: 42px;
 }
 
+/* PERFECT CENTER */
 .eye-icon {
   position: absolute;
   right: 12px;
-  top: 50%;
-  transform: translateY(-50%);
+  top: 0;
+  height: 44px;              /* 🔑 SAME AS INPUT */
+  display: flex;
+  align-items: center;       /* 🔑 TRUE CENTER */
   cursor: pointer;
-  color: #fff;
+  font-size: 16px;
+  color: rgb(0, 0, 0);
 }
+
+
 
 button {
   width: 100%;
@@ -195,6 +207,7 @@ button {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: 24px;
 }
 
 .profile {
@@ -293,6 +306,7 @@ button {
 
 /* Section container (BIAT / Udavi) */
 .section {
+  margin-top: 16px;
   background: white;
   padding: 20px;
   border-radius: 14px;
@@ -324,7 +338,11 @@ button {
 .grid-card .actions {
   margin-top: 12px;
   display: flex;
+  flex-direction: column;   /* 👈 THIS IS THE KEY */
   gap: 10px;
+}
+.grid-card .actions button {
+  width: 100%;              /* 🔑 Makes buttons full width */
 }
 
 /* Mobile: stack cards */
@@ -395,8 +413,10 @@ button {
 .write-actions {
   display: flex;
   justify-content: space-between;
+  gap: 16px;   /* 👈 THIS LINE creates space */
   margin-top: 20px;
 }
+
 
 .btn-back {
   background: #e5e7eb;
@@ -695,4 +715,59 @@ button {
 .table-btn.delete {
   background: #ef4444;
   color: white;
+}
+
+/* Prevent text cursor & selection on buttons and links */
+button,
+a {
+  user-select: none;       /* 🔑 disables text selection */
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+
+/* Disable text cursor & selection everywhere */
+* {
+  user-select: none;
+}
+
+/* Allow typing only in input boxes */
+input,
+textarea {
+  user-select: text;
+}
+
+/* ======================
+   VIEW PAGE – HORIZONTAL DATE ROW
+====================== */
+
+/* From + To in one row */
+.date-row {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+  margin-bottom: 24px;
+}
+
+/* Each date block */
+.date-field {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Label */
+.date-field label {
+  font-weight: 600;
+  min-width: 50px;
+}
+
+/* Date picker input */
+.calendar-input {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  width: 200px;
+  cursor: pointer;
 }
