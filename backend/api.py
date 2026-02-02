@@ -4,7 +4,6 @@ import psycopg2
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
-
 # Allow React access
 app.add_middleware(
     CORSMiddleware,
