@@ -1,0 +1,773 @@
+ /* ======================
+   GLOBAL
+====================== */
+* {
+  box-sizing: border-box;
+  font-family: "Segoe UI", system-ui, sans-serif;
+}
+
+html,
+body,
+#root {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  margin: 0;
+}
+
+/* ======================
+   LOGIN PAGE
+====================== */
+.login-page {
+  width: 100vw;
+  height: 100vh;
+  background: linear-gradient(135deg, #7b2ff7, #ff4ecd);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.login-card {
+  width: 660px;
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 28px;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+  text-align: center;
+}
+
+.icon {
+  width: 52px;
+  height: 52px;
+  margin: 0 auto 12px;
+  background: linear-gradient(135deg, #7b2ff7, #ff4ecd);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  color: white;
+}
+
+h2 {
+  margin: 8px 0;
+  font-size: 20px;
+  font-weight: bold;
+  color: #000;
+}
+
+.subtitle {
+  font-size: 14px;
+  font-weight: bold;
+  color: #777;
+  margin-bottom: 18px;
+}
+
+label {
+  display: block;
+  text-align: left;
+  font-size: 16px;
+  font-weight: bolder;
+  margin-bottom: 6px;
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+  background: #000;
+  color: white;
+  margin-bottom: 14px;
+}
+
+input::placeholder {
+  color: #ddd;
+}
+
+input:focus {
+  outline: none;
+  background: #1c1c1c;
+}
+.password-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.password-wrapper {
+  position: relative;
+}
+
+.password-wrapper input {
+  width: 100%;
+  height: 44px;              /* 🔑 FIX */
+  padding-right: 42px;
+}
+
+/* PERFECT CENTER */
+.eye-icon {
+  position: absolute;
+  right: 12px;
+  top: 0;
+  height: 44px;              /* 🔑 SAME AS INPUT */
+  display: flex;
+  align-items: center;       /* 🔑 TRUE CENTER */
+  cursor: pointer;
+  font-size: 16px;
+  color: rgb(0, 0, 0);
+}
+
+
+
+button {
+  width: 100%;
+  padding: 12px;
+  border-radius: 10px;
+  border: none;
+  background: linear-gradient(135deg, #7b2ff7, #ff4ecd);
+  color: white;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* ======================
+   DASHBOARD LAYOUT
+====================== */
+.dashboard-page {
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+  background: #f5f7fb;
+}
+
+/* ======================
+   SIDEBAR (FIXED)
+====================== */
+.sidebar {
+  width: 240px;
+  background: #1e293b;
+  color: white;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.logo {
+  font-size: 20px;
+  font-weight: 700;
+  padding: 20px 16px;
+}
+
+.sidebar nav {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 0 10px;
+}
+
+.sidebar nav a {
+  display: block;
+  padding: 10px;
+  margin-bottom: 6px;
+  border-radius: 8px;
+  color: #cfd6ff;
+  cursor: pointer;
+}
+
+
+.sidebar nav a.active,
+.sidebar nav a:hover {
+  background: #2d3a64;
+  color: white;
+}
+
+.logout {
+  margin-top: auto;
+  padding: 14px 16px;
+  font-size: 13px;
+  opacity: 0.8;
+  cursor: pointer;
+}
+
+/* ======================
+   MAIN CONTENT
+====================== */
+.dashboard-main {
+  flex: 1;
+  padding: 24px;
+  overflow-y: auto;
+}
+
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.profile {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #ddd;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dashboard-content {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 24px;
+  margin-top: 20px;
+}
+
+/* ======================
+   CLASS CARDS
+====================== */
+.class-card {
+  background: white;
+  padding: 16px;
+  border-radius: 12px;
+  margin-bottom: 14px;
+}
+
+.actions {
+  margin-top: 10px;
+}
+
+.btn-light {
+  padding: 6px 14px;
+  border-radius: 8px;
+  border: none;
+  background: #55dada;
+  margin-right: 8px;
+}
+
+.btn-primary {
+  padding: 6px 14px;
+  border-radius: 8px;
+  border: none;
+  background: #4f6cf7;
+  color: white;
+}
+
+/* ======================
+   TOOLS
+====================== */
+.tools {
+  background: white;
+  border-radius: 12px;
+  padding: 16px;
+}
+
+.tool-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+
+.tool-card.blue { background: #eef3ff; }
+.tool-card.purple { background: #f3e9ff; }
+.tool-card.green { background: #e9f7ef; }
+.tool-card.orange { background: #fff3e8; }
+
+/* ======================
+   MOBILE
+====================== */
+@media (max-width: 768px) {
+  .sidebar {
+    display: none;
+  }
+
+  .dashboard-content {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ======================
+   GRID DASHBOARD (NEW)
+====================== */
+
+/* Welcome text */
+.welcome-text {
+  margin-bottom: 20px;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+/* Section container (BIAT / Udavi) */
+.section {
+  margin-top: 16px;
+  background: white;
+  padding: 20px;
+  border-radius: 14px;
+  margin-bottom: 24px;
+}
+
+/* Section title */
+.section-title {
+  margin-bottom: 16px;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+/* GRID layout (2 cards per row) */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+/* Each class card */
+.grid-card {
+  background: #f9fafc;
+  padding: 20px;
+  border-radius: 12px;
+}
+
+/* Buttons inside cards */
+.grid-card .actions {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;   /* 👈 THIS IS THE KEY */
+  gap: 10px;
+}
+.grid-card .actions button {
+  width: 100%;              /* 🔑 Makes buttons full width */
+}
+
+/* Mobile: stack cards */
+@media (max-width: 768px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Sidebar icons */
+.nav-icon {
+  margin-right: 10px;
+  font-size: 14px;
+  vertical-align: middle;
+}
+
+/* ======================
+   WRITE NOTES PAGE
+====================== */
+.write-page {
+  min-height: 100vh;
+  background: #f5f7fb;
+  padding: 20px;
+}
+
+.write-header {
+  margin-bottom: 16px;
+}
+
+.write-header h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+/* Card */
+.write-card {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  max-width: 500px;
+}
+
+/* Inputs */
+.write-card label {
+  display: block;
+  margin-top: 12px;
+  margin-bottom: 4px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.write-card input,
+.write-card textarea {
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  font-size: 14px;
+  resize: none;
+}
+
+.write-card textarea {
+  background: #f9fafc;
+}
+
+/* Buttons */
+.write-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;   /* 👈 THIS LINE creates space */
+  margin-top: 20px;
+}
+
+
+.btn-back {
+  background: #e5e7eb;
+  color: #333;
+  border: none;
+  padding: 8px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.btn-save {
+  background: linear-gradient(135deg, #7b2ff7, #6a5af9);
+  color: white;
+  border: none;
+  padding: 8px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+/* Date picker input */
+.date-input {
+  width: 200px;
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+
+/* ======================
+   WRITE PAGE
+====================== */
+
+.write-page {
+  max-width: 800px;
+  margin: 30px auto;
+  background: white;
+  padding: 24px;
+  border-radius: 14px;
+}
+
+.write-title {
+  font-size: 22px;
+  margin-bottom: 20px;
+}
+
+.form-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.form-row label {
+  width: 140px;
+  font-weight: 600;
+}
+
+.form-row select {
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.date-select {
+  display: flex;
+  gap: 8px;
+}
+
+.form-group {
+  margin-bottom: 18px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+
+.form-group textarea {
+  width: 100%;
+  min-height: 100px;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  resize: vertical;
+}
+
+.save-btn {
+  background: #4f6cf7;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+}
+
+.date-input {
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+}
+
+/* Calendar input */
+.calendar-input {
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  cursor: pointer;
+  width: 180px;
+}
+
+/* Datepicker popup */
+.react-datepicker {
+  border-radius: 12px;
+  font-family: "Segoe UI", sans-serif;
+}
+
+.react-datepicker__header {
+  background-color: #1f2937;
+  border-bottom: none;
+}
+
+.react-datepicker__current-month,
+.react-datepicker__day-name {
+  color: white;
+}
+
+.react-datepicker__day {
+  border-radius: 50%;
+}
+
+.react-datepicker__day--selected {
+  background-color: #ef4444;
+  color: white;
+}
+
+.react-datepicker__day:hover {
+  background-color: #e5e7eb;
+}
+
+/* ======================
+   DARK MODE CALENDAR
+====================== */
+
+.react-datepicker {
+  background-color: #111827; /* dark bg */
+  border: 1px solid #1f2937;
+  border-radius: 14px;
+  color: white;
+  font-family: "Segoe UI", system-ui, sans-serif;
+}
+
+/* Header */
+.react-datepicker__header {
+  background-color: #020617;
+  border-bottom: 1px solid #1f2937;
+}
+
+.react-datepicker__current-month {
+  color: white;
+  font-weight: 600;
+}
+
+/* Day names (Sun, Mon...) */
+.react-datepicker__day-name {
+  color: #9ca3af;
+}
+
+/* Days */
+.react-datepicker__day {
+  color: #e5e7eb;
+  border-radius: 50%;
+}
+
+/* Hover day */
+.react-datepicker__day:hover {
+  background-color: #374151;
+}
+
+/* Selected day (RED CIRCLE like your image) */
+.react-datepicker__day--selected {
+  background-color: #ef4444;
+  color: white;
+}
+
+/* Today */
+.react-datepicker__day--today {
+  border: 1px solid #ef4444;
+}
+
+/* Disabled days */
+.react-datepicker__day--disabled {
+  color: #6b7280;
+}
+
+/* Navigation arrows */
+.react-datepicker__navigation-icon::before {
+  border-color: white;
+}
+
+/* Input field (date box) */
+.calendar-input {
+  background-color: #020617;
+  color: white;
+  border: 1px solid #374151;
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  width: 180px;
+}
+
+.calendar-input::placeholder {
+  color: #9ca3af;
+}
+/* ======================
+   VIEW RESULT TABLE
+====================== */
+
+.notes-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.notes-table th,
+.notes-table td {
+  border: 1px solid #aaa;
+  padding: 8px;
+  text-align: left;
+  vertical-align: top;
+}
+
+.notes-table th {
+  background: #e5e7eb;
+  font-weight: 600;
+}
+
+.notes-table tr:nth-child(even) {
+  background: #f9fafc;
+}
+
+.table-btn {
+  padding: 4px 10px;
+  border-radius: 6px;
+  border: none;
+  font-size: 12px;
+  cursor: pointer;
+  margin-right: 6px;
+}
+
+.table-btn.edit {
+  background: #4f6cf7;
+  color: white;
+}
+
+.table-btn.delete {
+  background: #ef4444;
+  color: white;
+}
+
+.notes-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.notes-table th,
+.notes-table td {
+  border: 1px solid #ccc;
+  padding: 8px;
+  font-size: 13px;
+}
+
+.notes-table th {
+  background: #f1f5f9;
+}
+
+.table-btn {
+  padding: 4px 8px;
+  margin-right: 6px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.table-btn.edit {
+  background: #4f6cf7;
+  color: white;
+}
+
+.table-btn.delete {
+  background: #ef4444;
+  color: white;
+}
+
+/* Prevent text cursor & selection on buttons and links */
+button,
+a {
+  user-select: none;       /* 🔑 disables text selection */
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+
+/* Disable text cursor & selection everywhere */
+* {
+  user-select: none;
+}
+
+/* Allow typing only in input boxes */
+input,
+textarea {
+  user-select: text;
+}
+
+/* ======================
+   VIEW PAGE – HORIZONTAL DATE ROW
+====================== */
+
+/* From + To in one row */
+.date-row {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+  margin-bottom: 24px;
+}
+
+/* Each date block */
+.date-field {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Label */
+.date-field label {
+  font-weight: 600;
+  min-width: 50px;
+}
+
+/* Date picker input */
+.calendar-input {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  width: 200px;
+  cursor: pointer;
+}
