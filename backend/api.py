@@ -12,8 +12,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-
 # ------------------------
 # Database Connection
 # ------------------------
@@ -24,8 +22,6 @@ def get_db():
         user="postgres",
         password="aiat"
     )
-
-
 # ------------------------
 # Data Model (POST)
 # ------------------------
@@ -40,8 +36,6 @@ class Note(BaseModel):
     created_date: str
     user_id: int
     what_homework_did_i_give: str
-
-
 # ------------------------
 # POST → Save
 # ------------------------
@@ -83,8 +77,6 @@ def save_note(note: Note):
     conn.close()
 
     return {"message": "Saved Successfully"}
-
-
 # ------------------------
 # GET → Read Notes by User ID
 # ------------------------
@@ -122,7 +114,6 @@ def get_notes_by_user(id: int):
         })
 
     return result
-
 # ------------------------
 # PUT → Update Note by ID
 # ------------------------
@@ -166,21 +157,15 @@ def update_note(id: int, note: Note):
     conn.close()
 
     return {"message": "Updated Successfully"}
-
 # ------------------------
 # DELETE → Delete Note by ID
 # ------------------------
 @app.delete("/notes/{id}")
 def delete_note(id: int):
-
     conn = get_db()
     cur = conn.cursor()
-
     cur.execute("DELETE FROM teacher_notes WHERE id = %s", (id,))
-
     conn.commit()
-
     cur.close()
     conn.close()
-
     return {"message": "Deleted Successfully"}
