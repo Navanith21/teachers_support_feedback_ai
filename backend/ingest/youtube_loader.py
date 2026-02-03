@@ -24,10 +24,11 @@ def ingest_youtube(youtube_url: str) -> str | None:
 
         api = YouTubeTranscriptApi()
 
-        # ✅ CORRECT method for your version
+        # ✅ fetch() returns objects
         transcript = api.fetch(video_id)
 
-        return " ".join(item["text"] for item in transcript)
+        # ✅ FIX IS HERE
+        return " ".join(item.text for item in transcript)
 
     except (TranscriptsDisabled, NoTranscriptFound):
         print(f"⚠️ Transcript not available: {youtube_url}")
