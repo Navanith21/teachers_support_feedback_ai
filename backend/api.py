@@ -1,9 +1,13 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 import psycopg2
 from fastapi.middleware.cors import CORSMiddleware
 
+# ------------------------
+# App Setup
+# ------------------------
 app = FastAPI()
+
 # Allow React access
 app.add_middleware(
     CORSMiddleware,
@@ -11,6 +15,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 # ------------------------
 # Database Connection
 # ------------------------
@@ -21,8 +26,9 @@ def get_db():
         user="postgres",
         password="aiat"
     )
+
 # ------------------------
-# Data Model (POST)
+# Data Model
 # ------------------------
 class Note(BaseModel):
     username: str
@@ -35,8 +41,10 @@ class Note(BaseModel):
     created_date: str
     user_id: int
     what_homework_did_i_give: str
+
+
 # ------------------------
-# POST → Save
+# POST → Save Note
 # ------------------------
 @app.post("/save")
 def save_note(note: Note):
@@ -76,19 +84,18 @@ def save_note(note: Note):
     conn.close()
 
     return {"message": "Saved Successfully"}
+
+
 # ------------------------
-# GET → Read Notes by User ID
+# GET → Get All Notes
 # ------------------------
-@app.get("/notes/{id}")
-def get_notes_by_user(id: int):
+@app.get("/notes")
+def get_all_notes():
 
     conn = get_db()
     cur = conn.cursor()
 
-    cur.execute("""
-        SELECT * FROM teacher_notes
-        WHERE id = %s
-    """, (id,))
+    cur.execute("SELECT * FROM teacher_notes ORDER BY id DESC")
 
     rows = cur.fetchall()
 
@@ -113,8 +120,47 @@ def get_notes_by_user(id: int):
         })
 
     return result
+
+
 # ------------------------
-# PUT → Update Note by ID
+# GET → Get One Note by ID
+# ------------------------
+@app.get("/notes/{id}")
+def get_note_by_id(id: int):
+
+    conn = get_db()
+    cur = conn.cursor()
+
+    cur.execute(
+        "SELECT * FROM teacher_notes WHERE id = %s",
+        (id,)
+    )
+
+    row = cur.fetchone()
+
+    cur.close()
+    conn.close()
+
+    if not row:
+        raise HTTPException(status_code=404, detail="Note not found")
+
+    return {
+        "id": row[0],
+        "username": row[1],
+        "school": row[2],
+        "grade": row[3],
+        "what_i_prepared": row[4],
+        "what_i_did_well": row[5],
+        "what_went_well": row[6],
+        "where_to_improve": row[7],
+        "created_date": str(row[8]),
+        "user_id": row[9],
+        "what_homework_did_i_give": row[10]
+    }
+
+
+# ------------------------
+# PUT → Update Note
 # ------------------------
 @app.put("/notes/{id}")
 def update_note(id: int, note: Note):
@@ -125,17 +171,17 @@ def update_note(id: int, note: Note):
     cur.execute("""
         UPDATE teacher_notes
         SET
-            username = %s,
-            school = %s,
-            grade = %s,
-            what_i_prepared = %s,
-            what_i_did_well = %s,
-            what_went_well = %s,
-            where_to_improve = %s,
-            created_date = %s,
-            user_id = %s,
-            what_homework_did_i_give = %s
-        WHERE id = %s
+            username=%s,
+            school=%s,
+            grade=%s,
+            what_i_prepared=%s,
+            what_i_did_well=%s,
+            what_went_well=%s,
+            where_to_improve=%s,
+            created_date=%s,
+            user_id=%s,
+            what_homework_did_i_give=%s
+        WHERE id=%s
     """, (
         note.username,
         note.school,
@@ -151,20 +197,28 @@ def update_note(id: int, note: Note):
     ))
 
     conn.commit()
-
     cur.close()
     conn.close()
 
     return {"message": "Updated Successfully"}
+
+
 # ------------------------
-# DELETE → Delete Note by ID
+# DELETE → Delete Note
 # ------------------------
 @app.delete("/notes/{id}")
 def delete_note(id: int):
+
     conn = get_db()
     cur = conn.cursor()
-    cur.execute("DELETE FROM teacher_notes WHERE id = %s", (id,))
+
+    cur.execute(
+        "DELETE FROM teacher_notes WHERE id=%s",
+        (id,)
+    )
+
     conn.commit()
     cur.close()
     conn.close()
+
     return {"message": "Deleted Successfully"}
