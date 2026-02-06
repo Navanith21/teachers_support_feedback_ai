@@ -1,5 +1,5 @@
 import { useLocation, useNavigate } from "react-router-dom";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 
 import "../App.css";
 
@@ -14,21 +14,19 @@ export default function ViewResult() {
   const [notes, setNotes] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // ✅ This stops double loading
-  const hasFetched = useRef(false);
 
-
+  // -----------------------------
+  // Format Date
+  // -----------------------------
   const formatDate = (d) => {
     return new Date(d).toISOString().split("T")[0];
   };
 
 
+  // -----------------------------
+  // Load Data
+  // -----------------------------
   useEffect(() => {
-
-    // 🔴 Stop second run
-    if (hasFetched.current) return;
-
-    hasFetched.current = true;
 
     if (!fromDate || !toDate) return;
 
@@ -37,27 +35,28 @@ export default function ViewResult() {
   }, [fromDate, toDate]);
 
 
+  // -----------------------------
+  // Fetch Notes
+  // -----------------------------
   const fetchNotes = async () => {
 
     try {
 
       setLoading(true);
 
-      const res = await fetch("http://127.0.0.1:8000/notes");
-      const data = await res.json();
-
       const start = formatDate(fromDate);
       const end = formatDate(toDate);
 
-      const filtered = data.filter(n =>
-        n.created_date >= start &&
-        n.created_date <= end
+      const res = await fetch(
+        `http://127.0.0.1:8000/notes-by-date?from_date=${start}&to_date=${end}`
       );
 
-      setNotes(filtered);
+      const data = await res.json();
+
+      setNotes(data);
 
     } catch (err) {
-      console.log("Error:", err);
+      alert("Failed to load data");
 
     } finally {
       setLoading(false);
@@ -65,47 +64,77 @@ export default function ViewResult() {
   };
 
 
-  // -------- DELETE --------
-  const deleteNote = async (id) => {
+  // -----------------------------
+  // Delete Note
+  // -----------------------------
+  const handleDelete = async (id) => {
 
-    if (!window.confirm("Delete this note?")) return;
+    if (!window.confirm("Are you sure you want to delete?")) return;
 
-    await fetch(`http://127.0.0.1:8000/notes/${id}`, {
-      method: "DELETE",
-    });
+    try {
 
-    fetchNotes();
+      const res = await fetch(
+        `http://127.0.0.1:8000/notes/${id}`,
+        {
+          method: "DELETE"
+        }
+      );
+
+      if (res.ok) {
+
+        alert("Deleted Successfully");
+
+        // Reload list
+        fetchNotes();
+
+      } else {
+        alert("Delete Failed");
+      }
+
+    } catch (err) {
+      alert("Server Error");
+    }
   };
 
 
+  // -----------------------------
+  // UI
+  // -----------------------------
   return (
 
-    <div className="write-page">
+    <div className="write-page wide-page">
 
-      <h2>Teachers Notes</h2>
 
+      <h2 className="write-title">Teachers Notes</h2>
+
+
+      {/* Date Range */}
       <p>
         <strong>From:</strong>{" "}
-        {new Date(fromDate).toDateString()} <br />
+        {fromDate ? new Date(fromDate).toDateString() : "-"} <br />
 
         <strong>To:</strong>{" "}
-        {new Date(toDate).toDateString()}
+        {toDate ? new Date(toDate).toDateString() : "-"}
       </p>
 
 
-      {loading ? (
+      {/* Loading */}
+      {loading && <p>Loading...</p>}
 
-        <p>Loading...</p>
 
-      ) : notes.length === 0 ? (
+      {/* No Data */}
+      {!loading && notes.length === 0 && (
+        <p>No data found.</p>
+      )}
 
-        <p>No data found</p>
 
-      ) : (
+      {/* Table */}
+      {!loading && notes.length > 0 && (
 
-        <div className="table-wrapper">
+        <div className="table-wrapper-full">
 
-          <table className="teacher-table" border="1">
+          <table className="teacher-table-full">
+
 
             <thead>
               <tr>
@@ -128,27 +157,34 @@ export default function ViewResult() {
                 <tr key={n.id}>
 
                   <td>{n.created_date}</td>
+
                   <td>{n.username}</td>
+
                   <td>{n.what_i_prepared}</td>
+
                   <td>{n.what_i_did_well}</td>
+
                   <td>{n.what_went_well}</td>
+
                   <td>{n.where_to_improve}</td>
+
                   <td>{n.what_homework_did_i_give}</td>
 
-                  <td>
+
+                  {/* Action Buttons */}
+                  <td className="action-col">
 
                     <button
-                      onClick={() =>
-                        alert("Edit feature coming soon 😄")
-                      }
+                      className="btn-edit"
+                      onClick={() => navigate(`/edit/${n.id}`)}
                     >
                       Edit
                     </button>
 
-                    {" "}
 
                     <button
-                      onClick={() => deleteNote(n.id)}
+                      className="btn-delete"
+                      onClick={() => handleDelete(n.id)}
                     >
                       Delete
                     </button>
@@ -161,6 +197,7 @@ export default function ViewResult() {
 
             </tbody>
 
+
           </table>
 
         </div>
@@ -168,11 +205,14 @@ export default function ViewResult() {
       )}
 
 
-      <br />
-
-      <button onClick={() => navigate(-1)}>
+      {/* Back Button */}
+      <button
+        className="btn-back"
+        onClick={() => navigate(-1)}
+      >
         Back
       </button>
+
 
     </div>
   );

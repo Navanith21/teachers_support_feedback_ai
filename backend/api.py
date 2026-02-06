@@ -225,16 +225,44 @@ def get_note(id: int):
         "what_homework_did_i_give": row[10]
     }
 
+# ------------------------
+# PUT → Update Note by ID
+# ------------------------
+from datetime import datetime, timedelta
 
-# ------------------------
-# PUT → Update
-# ------------------------
 @app.put("/notes/{id}")
 def update_note(id: int, note: Note):
 
     conn = get_db()
     cur = conn.cursor()
 
+    # Get created_date of this note
+    cur.execute("""
+        SELECT created_date
+        FROM teacher_notes
+        WHERE id = %s
+    """, (id,))
+
+    row = cur.fetchone()
+
+    if not row:
+        cur.close()
+        conn.close()
+        return {"error": "Note not found"}
+
+    created_date = row[0]
+
+    # Convert to date
+    created_date = datetime.strptime(str(created_date), "%Y-%m-%d")
+    today = datetime.now()
+
+    # Check 7 days
+    if today - created_date > timedelta(days=7):
+        cur.close()
+        conn.close()
+        return {"error": "Editing time expired (7 days limit)"}
+
+    # Update if allowed
     cur.execute("""
         UPDATE teacher_notes
         SET
@@ -268,7 +296,6 @@ def update_note(id: int, note: Note):
     conn.close()
 
     return {"message": "Updated Successfully"}
-
 
 # ------------------------
 # DELETE → Delete
