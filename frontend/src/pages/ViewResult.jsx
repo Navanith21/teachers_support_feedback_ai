@@ -1,6 +1,5 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-
 import "../App.css";
 
 export default function ViewResult() {
@@ -15,17 +14,24 @@ export default function ViewResult() {
   const [loading, setLoading] = useState(true);
 
 
-  // -----------------------------
-  // Format Date
-  // -----------------------------
-  const formatDate = (d) => {
-    return new Date(d).toISOString().split("T")[0];
+  // =========================
+  // Format Date (NO timezone bug)
+  // =========================
+  const formatDate = (date) => {
+
+    const d = new Date(date);
+
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, "0");
+    const day = String(d.getDate()).padStart(2, "0");
+
+    return `${year}-${month}-${day}`;
   };
 
 
-  // -----------------------------
-  // Load Data
-  // -----------------------------
+  // =========================
+  // Load when date changes
+  // =========================
   useEffect(() => {
 
     if (!fromDate || !toDate) return;
@@ -35,9 +41,9 @@ export default function ViewResult() {
   }, [fromDate, toDate]);
 
 
-  // -----------------------------
+  // =========================
   // Fetch Notes
-  // -----------------------------
+  // =========================
   const fetchNotes = async () => {
 
     try {
@@ -46,6 +52,8 @@ export default function ViewResult() {
 
       const start = formatDate(fromDate);
       const end = formatDate(toDate);
+
+      console.log("From:", start, "To:", end); // debug
 
       const res = await fetch(
         `http://127.0.0.1:8000/notes-by-date?from_date=${start}&to_date=${end}`
@@ -56,17 +64,20 @@ export default function ViewResult() {
       setNotes(data);
 
     } catch (err) {
+
+      console.error(err);
       alert("Failed to load data");
 
     } finally {
+
       setLoading(false);
     }
   };
 
 
-  // -----------------------------
+  // =========================
   // Delete Note
-  // -----------------------------
+  // =========================
   const handleDelete = async (id) => {
 
     if (!window.confirm("Are you sure you want to delete?")) return;
@@ -84,27 +95,29 @@ export default function ViewResult() {
 
         alert("Deleted Successfully");
 
-        // Reload list
-        fetchNotes();
+        fetchNotes(); // reload
 
       } else {
+
         alert("Delete Failed");
       }
 
     } catch (err) {
+
       alert("Server Error");
     }
   };
 
 
-  // -----------------------------
+  // =========================
   // UI
-  // -----------------------------
+  // =========================
   return (
 
     <div className="write-page wide-page">
 
 
+      {/* Title */}
       <h2 className="write-title">Teachers Notes</h2>
 
 
@@ -138,6 +151,7 @@ export default function ViewResult() {
 
             <thead>
               <tr>
+
                 <th>Date</th>
                 <th>Name</th>
                 <th>Prepared</th>
@@ -146,6 +160,7 @@ export default function ViewResult() {
                 <th>Improve</th>
                 <th>Homework</th>
                 <th>Action</th>
+
               </tr>
             </thead>
 
@@ -155,6 +170,7 @@ export default function ViewResult() {
               {notes.map((n) => (
 
                 <tr key={n.id}>
+
 
                   <td>{n.created_date}</td>
 
@@ -171,8 +187,9 @@ export default function ViewResult() {
                   <td>{n.what_homework_did_i_give}</td>
 
 
-                  {/* Action Buttons */}
+                  {/* Buttons */}
                   <td className="action-col">
+
 
                     <button
                       className="btn-edit"
@@ -188,6 +205,7 @@ export default function ViewResult() {
                     >
                       Delete
                     </button>
+
 
                   </td>
 
@@ -205,7 +223,7 @@ export default function ViewResult() {
       )}
 
 
-      {/* Back Button */}
+      {/* Back */}
       <button
         className="btn-back"
         onClick={() => navigate(-1)}

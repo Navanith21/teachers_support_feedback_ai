@@ -1,4 +1,5 @@
 import { useNavigate, NavLink } from "react-router-dom";
+import { useEffect } from "react";
 import {
   FaTachometerAlt,
   FaBook,
@@ -9,8 +10,30 @@ import {
 import "../App.css";
 
 export default function Dashboard() {
-  const navigate = useNavigate();
+  const navigate = useNavigate(); // ✅ Declare first
+  const token = localStorage.getItem("token");
   const username = localStorage.getItem("username") || "Teacher";
+
+  // ✅ Check login & fetch data
+  useEffect(() => {
+    if (!token) {
+      navigate("/");
+      return;
+    }
+
+    fetch("http://127.0.0.1:8000/dashboard", {
+      headers: {
+        Authorization: `Bearer ${token}`, // ✅ Fixed
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log("Dashboard Data:", data);
+      })
+      .catch((err) => {
+        console.error("Error:", err);
+      });
+  }, [token, navigate]);
 
   return (
     <div className="dashboard-page">
@@ -73,7 +96,6 @@ export default function Dashboard() {
 
         {/* ================= CONTENT ================= */}
         <div>
-          {/* BIAT */}
           <div className="section">
             <div className="section-title">BIAT</div>
 
@@ -87,13 +109,13 @@ export default function Dashboard() {
                   >
                     Write
                   </button>
-                    <button
-                      type="button"
-                      className="btn-primary"
-                      onClick={() => navigate("/view")}
-                    >
-                      View
-                    </button>
+
+                  <button
+                    className="btn-primary"
+                    onClick={() => navigate("/view")}
+                  >
+                    View
+                  </button>
                 </div>
               </div>
 
@@ -106,6 +128,7 @@ export default function Dashboard() {
                   >
                     Write
                   </button>
+
                   <button
                     className="btn-primary"
                     onClick={() => navigate("/view")}
@@ -117,7 +140,6 @@ export default function Dashboard() {
             </div>
           </div>
 
-          {/* UDAVI */}
           <div className="section">
             <div className="section-title">Udavi</div>
 
@@ -131,6 +153,7 @@ export default function Dashboard() {
                   >
                     Write
                   </button>
+
                   <button
                     className="btn-primary"
                     onClick={() => navigate("/view")}
@@ -149,6 +172,7 @@ export default function Dashboard() {
                   >
                     Write
                   </button>
+
                   <button
                     className="btn-primary"
                     onClick={() => navigate("/view")}
