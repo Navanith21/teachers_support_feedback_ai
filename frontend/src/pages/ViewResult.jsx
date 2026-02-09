@@ -11,11 +11,11 @@ export default function ViewResult() {
   const toDate = state?.toDate;
 
   const [notes, setNotes] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
 
   // =========================
-  // Format Date (NO timezone bug)
+  // Format Date (Fix timezone bug)
   // =========================
   const formatDate = (date) => {
 
@@ -30,7 +30,7 @@ export default function ViewResult() {
 
 
   // =========================
-  // Load when date changes
+  // Load Data when Date Changes
   // =========================
   useEffect(() => {
 
@@ -53,13 +53,22 @@ export default function ViewResult() {
       const start = formatDate(fromDate);
       const end = formatDate(toDate);
 
-      console.log("From:", start, "To:", end); // debug
+      console.log("Fetching:", start, end); // Debug
 
       const res = await fetch(
-        `http://127.0.0.1:8000/notes-by-date?from_date=${start}&to_date=${end}`
+        `http://127.0.0.1:8000/notes-by-date?from_date=${start}&to_date=${end}`,
+        {
+          cache: "no-store"   // ❗ Prevent cache issue
+        }
       );
 
+      if (!res.ok) {
+        throw new Error("API Error");
+      }
+
       const data = await res.json();
+
+      console.log("Result:", data); // Debug
 
       setNotes(data);
 
@@ -94,8 +103,7 @@ export default function ViewResult() {
       if (res.ok) {
 
         alert("Deleted Successfully");
-
-        fetchNotes(); // reload
+        fetchNotes();
 
       } else {
 

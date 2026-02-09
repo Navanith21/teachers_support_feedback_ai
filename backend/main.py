@@ -1,19 +1,29 @@
 from fastapi import FastAPI, HTTPException, Depends, status
-from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import OAuth2PasswordBearer
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
+
+from pydantic import BaseModel
 from datetime import datetime, timedelta
 from jose import jwt, JWTError
 import psycopg2
-from typing import List
+import os
+
 
 # ================= CONFIG =================
+
 SECRET_KEY = "be2a1efff37b0737fb6143f1935d0ac30cc1bc49517259e6540f500ba4751304"
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 60
 
+
 # ================= APP =================
+
 app = FastAPI()
+
+
+# ================= CORS =================
 
 app.add_middleware(
     CORSMiddleware,
@@ -24,9 +34,33 @@ app.add_middleware(
 )
 
 
-# ------------------------
-# Database Connection
-# ------------------------
+# ================= FRONTEND PATH =================
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+FRONTEND_PATH = os.path.join(BASE_DIR, "../frontend/dist")
+
+
+# ================= SERVE FRONTEND =================
+
+# Serve assets
+if os.path.exists(FRONTEND_PATH):
+
+    app.mount(
+        "/assets",
+        StaticFiles(directory=os.path.join(FRONTEND_PATH, "assets")),
+        name="assets"
+    )
+
+
+# Main React page
+@app.get("/")
+def serve_frontend():
+    return FileResponse(os.path.join(FRONTEND_PATH, "index.html"))
+
+
+# ================= DATABASE =================
+
 def get_db():
     return psycopg2.connect(
         host="localhost",
@@ -36,64 +70,82 @@ def get_db():
     )
 
 
+# ================= AUTH =================
+
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
 
-# ================= DUMMY DB =================
+
 fake_users_db = {
     "teacher": {"username": "teacher", "password": "1234"}
 }
 
-# ================= MODELS =================
+
 class LoginRequest(BaseModel):
     username: str
     password: str
 
-# ================= AUTH =================
+
 def create_access_token(data: dict):
+
     to_encode = data.copy()
+
     expire = datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+
     to_encode.update({"exp": expire})
+
     return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
 
+
 def get_current_user(token: str = Depends(oauth2_scheme)):
+
     try:
+
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+
         username = payload.get("sub")
+
         if not username:
             raise HTTPException(status_code=401, detail="Invalid token")
+
         return username
+
     except JWTError:
+
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid or expired token"
         )
 
-# ================= ROUTES =================
+
+# ================= LOGIN =================
+
 @app.post("/login")
 def login(data: LoginRequest):
+
     user = fake_users_db.get(data.username)
 
     if not user or user["password"] != data.password:
         raise HTTPException(status_code=401, detail="Invalid credentials")
 
     token = create_access_token({"sub": user["username"]})
+
     return {
         "access_token": token,
         "token_type": "bearer",
         "username": user["username"]
     }
 
+
 @app.get("/dashboard")
 def dashboard(user: str = Depends(get_current_user)):
+
     return {"message": f"Welcome {user}"}
 
 
+# ================= NOTE MODEL =================
 
-
-# ------------------------
-# Data Model
-# ------------------------
 class Note(BaseModel):
+
     username: str
     school: str
     grade: str
@@ -101,14 +153,13 @@ class Note(BaseModel):
     what_i_did_well: str
     what_went_well: str
     where_to_improve: str
-    created_date: str      # YYYY-MM-DD
+    created_date: str
     user_id: int
     what_homework_did_i_give: str
 
 
-# ------------------------
-# POST → Save Note
-# ------------------------
+# ================= SAVE =================
+
 @app.post("/save")
 def save_note(note: Note):
 
@@ -149,9 +200,8 @@ def save_note(note: Note):
     return {"message": "Saved Successfully"}
 
 
-# ------------------------
-# GET → Get ALL Notes
-# ------------------------
+# ================= GET ALL =================
+
 @app.get("/notes")
 def get_all_notes():
 
@@ -159,18 +209,7 @@ def get_all_notes():
     cur = conn.cursor()
 
     cur.execute("""
-        SELECT
-            id,
-            username,
-            school,
-            grade,
-            what_i_prepared,
-            what_i_did_well,
-            what_went_well,
-            where_to_improve,
-            created_date,
-            user_id,
-            what_homework_did_i_give
+        SELECT *
         FROM teacher_notes
         ORDER BY created_date DESC, id DESC
     """)
@@ -182,26 +221,27 @@ def get_all_notes():
 
     result = []
 
-    for row in rows:
+    for r in rows:
+
         result.append({
-            "id": row[0],
-            "username": row[1],
-            "school": row[2],
-            "grade": row[3],
-            "what_i_prepared": row[4],
-            "what_i_did_well": row[5],
-            "what_went_well": row[6],
-            "where_to_improve": row[7],
-            "created_date": str(row[8]),
-            "user_id": row[9],
-            "what_homework_did_i_give": row[10]
+            "id": r[0],
+            "username": r[1],
+            "school": r[2],
+            "grade": r[3],
+            "what_i_prepared": r[4],
+            "what_i_did_well": r[5],
+            "what_went_well": r[6],
+            "where_to_improve": r[7],
+            "created_date": str(r[8]),
+            "user_id": r[9],
+            "what_homework_did_i_give": r[10]
         })
 
     return result
 
-# ------------------------
-# GET → Notes by Date Range ✅
-# ------------------------
+
+# ================= DATE FILTER =================
+
 @app.get("/notes-by-date")
 def get_notes_by_date(from_date: str, to_date: str):
 
@@ -209,18 +249,7 @@ def get_notes_by_date(from_date: str, to_date: str):
     cur = conn.cursor()
 
     cur.execute("""
-        SELECT
-            id,
-            username,
-            school,
-            grade,
-            what_i_prepared,
-            what_i_did_well,
-            what_went_well,
-            where_to_improve,
-            created_date,
-            user_id,
-            what_homework_did_i_give
+        SELECT *
         FROM teacher_notes
         WHERE created_date BETWEEN %s AND %s
         ORDER BY created_date DESC
@@ -233,64 +262,59 @@ def get_notes_by_date(from_date: str, to_date: str):
 
     result = []
 
-    for row in rows:
+    for r in rows:
+
         result.append({
-            "id": row[0],
-            "username": row[1],
-            "school": row[2],
-            "grade": row[3],
-            "what_i_prepared": row[4],
-            "what_i_did_well": row[5],
-            "what_went_well": row[6],
-            "where_to_improve": row[7],
-            "created_date": str(row[8]),
-            "user_id": row[9],
-            "what_homework_did_i_give": row[10]
+            "id": r[0],
+            "username": r[1],
+            "school": r[2],
+            "grade": r[3],
+            "what_i_prepared": r[4],
+            "what_i_did_well": r[5],
+            "what_went_well": r[6],
+            "where_to_improve": r[7],
+            "created_date": str(r[8]),
+            "user_id": r[9],
+            "what_homework_did_i_give": r[10]
         })
 
     return result
 
 
-# ------------------------
-# GET → One Note
-# ------------------------
+# ================= GET ONE =================
+
 @app.get("/notes/{id}")
 def get_note(id: int):
 
     conn = get_db()
     cur = conn.cursor()
 
-    cur.execute("""
-        SELECT * FROM teacher_notes
-        WHERE id = %s
-    """, (id,))
+    cur.execute("SELECT * FROM teacher_notes WHERE id=%s", (id,))
 
-    row = cur.fetchone()
+    r = cur.fetchone()
 
     cur.close()
     conn.close()
 
-    if not row:
-        return {"error": "Note not found"}
+    if not r:
+        return {"error": "Not found"}
 
     return {
-        "id": row[0],
-        "username": row[1],
-        "school": row[2],
-        "grade": row[3],
-        "what_i_prepared": row[4],
-        "what_i_did_well": row[5],
-        "what_went_well": row[6],
-        "where_to_improve": row[7],
-        "created_date": str(row[8]),
-        "user_id": row[9],
-        "what_homework_did_i_give": row[10]
+        "id": r[0],
+        "username": r[1],
+        "school": r[2],
+        "grade": r[3],
+        "what_i_prepared": r[4],
+        "what_i_did_well": r[5],
+        "what_went_well": r[6],
+        "where_to_improve": r[7],
+        "created_date": str(r[8]),
+        "user_id": r[9],
+        "what_homework_did_i_give": r[10]
     }
 
-# ------------------------
-# PUT → Update Note by ID
-# ------------------------
-from datetime import datetime, timedelta
+
+# ================= UPDATE (7 DAYS LIMIT) =================
 
 @app.put("/notes/{id}")
 def update_note(id: int, note: Note):
@@ -298,47 +322,34 @@ def update_note(id: int, note: Note):
     conn = get_db()
     cur = conn.cursor()
 
-    # Get created_date of this note
-    cur.execute("""
-        SELECT created_date
-        FROM teacher_notes
-        WHERE id = %s
-    """, (id,))
+    cur.execute(
+        "SELECT created_date FROM teacher_notes WHERE id=%s", (id,)
+    )
 
     row = cur.fetchone()
 
     if not row:
-        cur.close()
-        conn.close()
-        return {"error": "Note not found"}
+        return {"error": "Not found"}
 
-    created_date = row[0]
+    created = datetime.strptime(str(row[0]), "%Y-%m-%d")
 
-    # Convert to date
-    created_date = datetime.strptime(str(created_date), "%Y-%m-%d")
-    today = datetime.now()
+    if datetime.now() - created > timedelta(days=7):
+        return {"error": "Edit expired (7 days limit)"}
 
-    # Check 7 days
-    if today - created_date > timedelta(days=7):
-        cur.close()
-        conn.close()
-        return {"error": "Editing time expired (7 days limit)"}
-
-    # Update if allowed
     cur.execute("""
         UPDATE teacher_notes
         SET
-            username = %s,
-            school = %s,
-            grade = %s,
-            what_i_prepared = %s,
-            what_i_did_well = %s,
-            what_went_well = %s,
-            where_to_improve = %s,
-            created_date = %s,
-            user_id = %s,
-            what_homework_did_i_give = %s
-        WHERE id = %s
+            username=%s,
+            school=%s,
+            grade=%s,
+            what_i_prepared=%s,
+            what_i_did_well=%s,
+            what_went_well=%s,
+            where_to_improve=%s,
+            created_date=%s,
+            user_id=%s,
+            what_homework_did_i_give=%s
+        WHERE id=%s
     """, (
         note.username,
         note.school,
@@ -357,21 +368,35 @@ def update_note(id: int, note: Note):
     cur.close()
     conn.close()
 
-    return {"message": "Updated Successfully"}
+    return {"message": "Updated"}
 
-# ------------------------
-# DELETE → Delete
-# ------------------------
+
+# ================= DELETE =================
+
 @app.delete("/notes/{id}")
 def delete_note(id: int):
 
     conn = get_db()
     cur = conn.cursor()
 
-    cur.execute("DELETE FROM teacher_notes WHERE id = %s", (id,))
+    cur.execute("DELETE FROM teacher_notes WHERE id=%s", (id,))
 
     conn.commit()
     cur.close()
     conn.close()
 
-    return {"message": "Deleted Successfully"}
+    return {"message": "Deleted"}
+
+
+# ================= REACT ROUTER FIX =================
+# IMPORTANT: Keep this at bottom
+
+@app.get("/{full_path:path}")
+def serve_react_app(full_path: str):
+
+    index_file = os.path.join(FRONTEND_PATH, "index.html")
+
+    if os.path.exists(index_file):
+        return FileResponse(index_file)
+
+    return {"error": "Frontend not built"}
