@@ -4,12 +4,16 @@ import Dashboard from "./pages/Dashboard";
 import Write from "./pages/Write";
 import View from "./pages/View";
 import ViewResult from "./pages/ViewResult";
+import AdminLogin from "./pages/AdminLogin";
+import CreateUser from "./pages/CreateUser";
 
 export default function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Login />} />
+        <Route path="/auth/login" element={<AdminLogin />} />
+        <Route path="/users/create" element={<CreateUser />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/write" element={<Write />} />
         <Route path="/view" element={<View />} />
