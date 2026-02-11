@@ -9,20 +9,15 @@ from datetime import datetime, timedelta
 from jose import jwt, JWTError
 import psycopg2
 import os
-
-
 # ================= CONFIG =================
 
 SECRET_KEY = "be2a1efff37b0737fb6143f1935d0ac30cc1bc49517259e6540f500ba4751304"
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 60
 
-
 # ================= APP =================
 
 app = FastAPI()
-
-
 # ================= CORS =================
 
 app.add_middleware(
@@ -32,15 +27,11 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-
 # ================= FRONTEND PATH =================
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 FRONTEND_PATH = os.path.join(BASE_DIR, "../frontend/dist")
-
-
 # ================= SERVE FRONTEND =================
 
 # Serve assets
@@ -52,12 +43,10 @@ if os.path.exists(FRONTEND_PATH):
         name="assets"
     )
 
-
 # Main React page
 @app.get("/")
 def serve_frontend():
     return FileResponse(os.path.join(FRONTEND_PATH, "index.html"))
-
 
 # ================= DATABASE =================
 
@@ -68,7 +57,6 @@ def get_db():
         user="postgres",
         password="aiat"
     )
-
 
 # ================= AUTH =================
 
@@ -84,7 +72,6 @@ class LoginRequest(BaseModel):
     username: str
     password: str
 
-
 def create_access_token(data: dict):
 
     to_encode = data.copy()
@@ -94,7 +81,6 @@ def create_access_token(data: dict):
     to_encode.update({"exp": expire})
 
     return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
-
 
 def get_current_user(token: str = Depends(oauth2_scheme)):
 
@@ -115,7 +101,6 @@ def get_current_user(token: str = Depends(oauth2_scheme)):
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid or expired token"
         )
-
 
 # ================= LOGIN =================
 
