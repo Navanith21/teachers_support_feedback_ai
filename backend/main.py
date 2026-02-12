@@ -15,10 +15,10 @@ SECRET_KEY = "be2a1efff37b0737fb6143f1935d0ac30cc1bc49517259e6540f500ba4751304"
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 60
 
-# ================= APP =================
+# ================= APP ===================
 
 app = FastAPI()
-# ================= CORS =================
+# ================= CORS ==================
 
 app.add_middleware(
     CORSMiddleware,
