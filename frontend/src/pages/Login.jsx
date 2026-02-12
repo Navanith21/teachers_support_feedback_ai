@@ -8,28 +8,15 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleLogin = async () => {
-    if (!username || !password) {
-      alert("Enter credentials");
-      return;
+  const handleLogin = () => {
+    if (username === "teacher" && password === "1234") {
+      localStorage.setItem("isLoggedIn", "true");
+      localStorage.setItem("username", username);
+      navigate("/dashboard");
+    } else {
+      alert("Invalid username or password");
     }
-  try {
-    const res = await fetch("http://127.0.0.1:8000/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username, password }),
-    });
-
-    if (!res.ok) throw new Error("Login failed");
-
-    const data = await res.json();
-
-    localStorage.setItem("token", data.access_token);
-    navigate("/dashboard");
-  } catch (err) {
-    alert("Invalid username or password");
-  }
-};
+  };
 
   return (
     <div className="login-page">
