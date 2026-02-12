@@ -126,7 +126,7 @@ def dashboard(user: str = Depends(get_current_user)):
 
     return {"message": f"Welcome {user}"}
 
-
+ 
 # ================= NOTE MODEL =================
 
 class Note(BaseModel):
